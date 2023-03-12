@@ -10,7 +10,7 @@
     <div style="width: 50%; margin: auto;">
         <%- include('./composants/header.ejs') %>
         <section>
-            <form action="">
+            <form action="/notes" method="post">
                 <label for="titre">Titre</label><br>
                 <input type="text" name="titre" id="titre"><br>
                 <label for="description">Description</label><br>
@@ -22,11 +22,10 @@
         </section>
         <section>
             <h2>Liste des notes</h2>
-            <ul>
-                <% for(i = 0; i < notes.length; i++) { %>
-                    <li><%= notes[i].titre + " : " + notes[i].desc %></li>
-                <% } %>
-            </ul>
+            <% for(i = 0; i < resultat.length; i++) { %>
+                <h3><%= resultat[i].titre %></h3>
+                <p><%= resultat[i].description %></p>
+            <% } %>
         </section>
     </div>
 </body>
