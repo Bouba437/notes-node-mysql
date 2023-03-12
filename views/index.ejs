@@ -11,6 +11,7 @@
         <%- include('./composants/header.ejs') %>
         <section>
             <form action="/notes" method="post">
+                <input type="hidden" name="id" id="id">
                 <label for="titre">Titre</label><br>
                 <input type="text" name="titre" id="titre"><br>
                 <label for="description">Description</label><br>
@@ -25,8 +26,20 @@
             <% for(i = 0; i < resultat.length; i++) { %>
                 <h3><%= resultat[i].titre %></h3>
                 <p><%= resultat[i].description %></p>
+
+                <input type="button" value="Modifier" onclick="remplirDonnees('<%= resultat[i].id %>', '<%= resultat[i].titre %>', '<%= resultat[i].description %>')">
+                <input type="button" value="Supprimer" onclick="">
             <% } %>
         </section>
     </div>
+
+    <script>
+        function remplirDonnees(id, titre, description) {
+            document.getElementById('id').value = id;
+            document.getElementById('titre').value = titre;
+            document.getElementById('description').value = description;
+        }
+    </script>
+
 </body>
 </html>

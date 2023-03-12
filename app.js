@@ -40,16 +40,21 @@ app.get("/", (req, res) => {
 
 })
 
-//Création de notes
+//Création et modification de notes
 app.post("/notes", (req, res) => {
+    let id = req.body.id === "" ? null : req.body.id;
     let titre = req.body.titre;
     let description = req.body.description;
+
+    let reqSql = id === null ? "INSERT INTO notes(id, titre, description) VALUES(?,?,?)" : "UPDATE notes SET titre = ?, description = ? WHERE id = ?";
+
+    let donnees = id === null ? [null, titre, description] : [titre, description, id]
 
     req.getConnection((erreur, connection) => {
         if(erreur) {
             console.log(erreur);
         } else {
-            connection.query("INSERT INTO notes(id, titre, description) VALUES(?,?,?)", [null, titre, description], (erreur, resultat) => {
+            connection.query(reqSql, donnees, (erreur, resultat) => {
                 if(erreur) {
                     console.log(erreur);
                 } else {
