@@ -1,6 +1,7 @@
 const express = require("express");
 const mysql = require("mysql");
 const myConnection = require("express-myconnection");
+const connection = require("express-myconnection");
 
 const optionBd = {
     host: "localhost",
@@ -59,6 +60,24 @@ app.post("/notes", (req, res) => {
                     console.log(erreur);
                 } else {
                     res.status(300).redirect("/");
+                }
+            })
+        }
+    })
+})
+
+//Suprression de notes
+app.delete("/notes/:id", (req, res) => {
+    const id = req.params.id;
+    req.getConnection((erreur, connection) => {
+        if(erreur) {
+            console.log(erreur);
+        } else {
+            connection.query("DELETE FROM notes WHERE id = ?", [id], (erreur, resultat) => {
+                if(erreur) {
+                    console.log(erreur);
+                } else {
+                    res.status(200).json({routeRacine: '/'});
                 }
             })
         }
