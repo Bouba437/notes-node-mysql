@@ -2,6 +2,7 @@ const express = require("express");
 const mysql = require("mysql");
 const myConnection = require("express-myconnection");
 const connection = require("express-myconnection");
+const notesRoutes = require("./routes/notesRoutes");
 
 const optionBd = {
     host: "localhost",
@@ -23,67 +24,8 @@ app.use(myConnection(mysql, optionBd, "pool"));
 app.set("view engine", "ejs");
 // app.set('views', 'views');
 
-app.get("/", (req, res) => {
-
-    req.getConnection((erreur, connection) => {
-        if(erreur) {
-            console.log(erreur);
-        } else {
-            connection.query("SELECT * FROM notes", [], (erreur, resultat) => {
-                if(erreur) {
-                    console.log(erreur);
-                } else {
-                    res.status(200).render('index', {resultat});
-                }
-            })
-        }
-    })
-
-})
-
-//Création et modification de notes
-app.post("/notes", (req, res) => {
-    let id = req.body.id === "" ? null : req.body.id;
-    let titre = req.body.titre;
-    let description = req.body.description;
-
-    let reqSql = id === null ? "INSERT INTO notes(id, titre, description) VALUES(?,?,?)" : "UPDATE notes SET titre = ?, description = ? WHERE id = ?";
-
-    let donnees = id === null ? [null, titre, description] : [titre, description, id]
-
-    req.getConnection((erreur, connection) => {
-        if(erreur) {
-            console.log(erreur);
-        } else {
-            connection.query(reqSql, donnees, (erreur, resultat) => {
-                if(erreur) {
-                    console.log(erreur);
-                } else {
-                    res.status(300).redirect("/");
-                }
-            })
-        }
-    })
-})
-
-//Suprression de notes
-app.delete("/notes/:id", (req, res) => {
-    const id = req.params.id;
-    req.getConnection((erreur, connection) => {
-        if(erreur) {
-            console.log(erreur);
-        } else {
-            connection.query("DELETE FROM notes WHERE id = ?", [id], (erreur, resultat) => {
-                if(erreur) {
-                    console.log(erreur);
-                } else {
-                    res.status(200).json({routeRacine: '/'});
-                }
-            })
-        }
-    })
-})
-
+//Définition des routes pour notes
+app.use(notesRoutes);
 
 app.get("/apropos", (req, res) => {
     res.status(200).render('apropos');
